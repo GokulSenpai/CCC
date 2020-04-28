@@ -2,47 +2,68 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Look : MonoBehaviour
+namespace Com.CompanyName.GameName
 {
-    public float mouseSensitivity = 100f;
-    public float smoothRotateSpeed = 5f;
-
-    float xRotation = 0f;
-    float yRotation = 0f;
-
-    public Transform playerBody;
-
-    // Start is called before the first frame update
-    void Start()
+    public class Look : MonoBehaviour
     {
-        Cursor.lockState = CursorLockMode.Locked;
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        #region Variables
 
-        xRotation -= mouseY;
-        yRotation += mouseX;
+        public float mouseSensitivity = 200f;
+        public float smoothRotateSpeed = 7f;
 
-        xRotation = Mathf.Clamp(xRotation, -90f, 90f);
-    }
+        float cameraXRotation = 0f;
+        float playerYRotation = 0f;
 
-    // LateUpdate is called after all Update functions have been called.
-    void LateUpdate()
-    {
-        Quaternion currentRotation = transform.rotation;
-        Quaternion desiredRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        public Transform theCamera;
+        public Transform thePlayer;
 
-        transform.rotation = Quaternion.Slerp(currentRotation, desiredRotation, Time.smoothDeltaTime * smoothRotateSpeed);
+        #endregion
 
-        Quaternion currentPlayerRotation = playerBody.transform.rotation;
-        Quaternion desiredPlayerRotation = Quaternion.Euler(xRotation, yRotation, 0f);
-        // Add or remove xRotation here to see a cool effect.
+        #region MonoBehaviour Callbacks
 
-        playerBody.transform.rotation = Quaternion.Slerp(currentPlayerRotation, desiredPlayerRotation, Time.smoothDeltaTime * smoothRotateSpeed);
-        // playerBody.transform.rotation = Quaternion.Euler(0f, playerBody.transform.rotation.y, playerBody.transform.rotation.z);
+        // Start is called before the first frame update
+        void Start()
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        // Update is called once per frame
+        void Update()
+        {
+            // Mouse Input
+            float horizontalMouseInput = Input.GetAxis("Mouse X") * mouseSensitivity * Time.smoothDeltaTime;
+            float verticalMouseInput = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.smoothDeltaTime;
+
+            // Rotation subtracted and added every frame based on mouse input
+            cameraXRotation -= verticalMouseInput;
+            playerYRotation += horizontalMouseInput;
+
+            // Vertical Clamp
+            cameraXRotation = Mathf.Clamp(cameraXRotation, -90f, 90f);
+
+        }
+
+        // LateUpdate is called after all Update functions have been called
+        void LateUpdate()
+        {
+            // Takes current local rotation of camera and rotation to move to
+            Quaternion currentRotation = theCamera.localRotation;
+            Quaternion desiredRotation = Quaternion.Euler(cameraXRotation, theCamera.localRotation.y, theCamera.localRotation.z);
+
+            // Smoothing
+            theCamera.localRotation = Quaternion.Slerp(currentRotation, desiredRotation, Time.smoothDeltaTime * smoothRotateSpeed);
+
+            // Takes current rotation of player and rotation to move to 
+            Quaternion currentPlayerRotation = thePlayer.rotation;
+            Quaternion desiredPlayerRotation = Quaternion.Euler(thePlayer.rotation.x, playerYRotation, thePlayer.rotation.z);
+
+            // Smoothing
+            thePlayer.rotation = Quaternion.Slerp(currentPlayerRotation, desiredPlayerRotation, Time.smoothDeltaTime * smoothRotateSpeed);
+    
+        }
+
+        #endregion
+
     }
 }
