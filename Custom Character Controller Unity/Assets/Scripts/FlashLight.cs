@@ -2,23 +2,23 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlashLight : MonoBehaviour
+namespace Com.CompanyName.GameName
 {
-    public GameObject flashLightObject;
-    private bool flashTheLight;
-
-    // Start is called before the first frame update
-    void Start()
+    public class FlashLight : MonoBehaviour
     {
-        
-    }
+        public GameObject flashLightObject;
+        private bool flashTheLight = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        if(Input.GetKey(KeyCode.F))
+        // Update is called once per frame
+        void Update()
         {
-            gameObject.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                flashTheLight = !flashTheLight;
+                flashLightObject.SetActive(flashTheLight);
+            }
         }
     }
+
 }
+

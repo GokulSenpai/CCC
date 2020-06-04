@@ -9,24 +9,22 @@ namespace Com.CompanyName.GameName
 
         #region Variables
 
+        [Space]
+        [Header("References")]
+        public Transform theCamera;
+        public Transform thePlayer;
+
+        [Space]
+        [Header("Mouse Data")]
         public float mouseSensitivity = 200f;
         public float smoothRotateSpeed = 7f;
 
         float cameraXRotation = 0f;
         float playerYRotation = 0f;
 
-        public Transform theCamera;
-        public Transform thePlayer;
-
         #endregion
 
         #region MonoBehaviour Callbacks
-
-        // Start is called before the first frame update
-        void Start()
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
 
         // Update is called once per frame
         void Update()
@@ -40,7 +38,7 @@ namespace Com.CompanyName.GameName
             playerYRotation += horizontalMouseInput;
 
             // Vertical Clamp
-            cameraXRotation = Mathf.Clamp(cameraXRotation, -90f, 90f);
+            cameraXRotation = Mathf.Clamp(cameraXRotation, -70f, 70f);
 
         }
 
