@@ -7,9 +7,9 @@ namespace Com.CompanyName.GameName
 {
     public class InteractableText : MonoBehaviour
     {
-        private Inspector inspector;
+        private Inspector _inspector;
 
-        RaycastHit hit;
+        private RaycastHit _hit;
 
         [Space]
         [Header("Raycast Data")]
@@ -22,43 +22,36 @@ namespace Com.CompanyName.GameName
         }
 
         private void Raycast()
-        {     
-            Vector3 fwd = transform.TransformDirection(Vector3.forward);
+        {
+            Transform rayTransform;
+            Vector3 fwd = (rayTransform = transform).TransformDirection(Vector3.forward);
 
-            bool iWantToRayCast = Physics.Raycast(transform.position, fwd, out hit, rayLength, layerMaskInteract.value);
+            bool iWantToRayCast = Physics.Raycast(rayTransform.position, fwd, out _hit, rayLength, layerMaskInteract.value);
             Debug.DrawRay(transform.position, fwd * rayLength, Color.red);
 
             if (iWantToRayCast)
             {
-                if (hit.collider.CompareTag("InteractObject"))
+                if (_hit.collider.CompareTag("InteractObject"))
                 {
-                    inspector = hit.collider.gameObject.GetComponent<Inspector>();
+                    _inspector = _hit.collider.gameObject.GetComponent<Inspector>();
 
-                    inspector.enabled = true;
+                    _inspector.enabled = true;
 
-                    inspector.ShowItemName();
+                    _inspector.ShowItemName();
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        inspector.ShowExtraInfo();
+                        _inspector.ShowExtraInfo();
                     }
                 }
             }
             else
             {
-                if (inspector != null)
+                if (_inspector != null)
                 {
-                    inspector.HideItemName();
+                    _inspector.HideItemName();
 
-                    if (inspector.iWantToWatch)
-                    {
-                        inspector.enabled = true;
-
-                    }
-                    else
-                    {
-                        inspector.enabled = false;
-                    }
+                    _inspector.enabled = _inspector.iWantToWatch;
                 }
             }
         }

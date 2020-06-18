@@ -1,10 +1,9 @@
-﻿using UnityEngine.UI;
-
-namespace Com.CompanyName.GameName
+﻿namespace State_Machine
 {
     public class StateMachine
     {
         public State CurrentState { get; private set; }
+        
 
         public void Initialize(State startingState)
         {

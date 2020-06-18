@@ -2,66 +2,85 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Com.CompanyName.GameName
+public class Look : MonoBehaviour
 {
-    public class Look : MonoBehaviour
+    #region Variables
+
+    [Space]
+    [Header("References")]
+    public Transform theCamera;
+    public Transform thePlayer;
+
+    [Space]
+    [Header("Mouse Data")]
+    public float mouseSensitivity = 100f;
+    public float smoothRotateSpeed = 5f;
+
+    public bool smoothMouse = true;
+
+    private float _cameraXRotation = 0f;
+    private float _playerYRotation = 0f;
+
+    #endregion
+
+    #region MonoBehaviour Callbacks
+
+    // Update is called once per frame
+    private void Update()
     {
+        // Mouse Input
+        float horizontalMouseInput = Input.GetAxis("Mouse X") * mouseSensitivity * Time.smoothDeltaTime;
+        float verticalMouseInput = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.smoothDeltaTime;
 
-        #region Variables
+        // Rotation subtracted and added every frame based on mouse input
+        _cameraXRotation -= verticalMouseInput;
+        _playerYRotation += horizontalMouseInput;
 
-        [Space]
-        [Header("References")]
-        public Transform theCamera;
-        public Transform thePlayer;
+        // Vertical Clamp
+        _cameraXRotation = Mathf.Clamp(_cameraXRotation, -70f, 70f);
 
-        [Space]
-        [Header("Mouse Data")]
-        public float mouseSensitivity = 200f;
-        public float smoothRotateSpeed = 7f;
-
-        float cameraXRotation = 0f;
-        float playerYRotation = 0f;
-
-        #endregion
-
-        #region MonoBehaviour Callbacks
-
-        // Update is called once per frame
-        void Update()
+        if (smoothMouse)
         {
-            // Mouse Input
-            float horizontalMouseInput = Input.GetAxis("Mouse X") * mouseSensitivity * Time.smoothDeltaTime;
-            float verticalMouseInput = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.smoothDeltaTime;
-
-            // Rotation subtracted and added every frame based on mouse input
-            cameraXRotation -= verticalMouseInput;
-            playerYRotation += horizontalMouseInput;
-
-            // Vertical Clamp
-            cameraXRotation = Mathf.Clamp(cameraXRotation, -70f, 70f);
-
+            SmoothMouse();
         }
-
-        // LateUpdate is called after all Update functions have been called
-        void LateUpdate()
+        else
         {
-            // Takes current local rotation of camera and rotation to move to
-            Quaternion currentRotation = theCamera.localRotation;
-            Quaternion desiredRotation = Quaternion.Euler(cameraXRotation, theCamera.localRotation.y, theCamera.localRotation.z);
-
-            // Smoothing
-            theCamera.localRotation = Quaternion.Slerp(currentRotation, desiredRotation, Time.smoothDeltaTime * smoothRotateSpeed);
-
-            // Takes current rotation of player and rotation to move to 
-            Quaternion currentPlayerRotation = thePlayer.rotation;
-            Quaternion desiredPlayerRotation = Quaternion.Euler(thePlayer.rotation.x, playerYRotation, thePlayer.rotation.z);
-
-            // Smoothing
-            thePlayer.rotation = Quaternion.Slerp(currentPlayerRotation, desiredPlayerRotation, Time.smoothDeltaTime * smoothRotateSpeed);
-    
+            NormalMouse();
         }
-
-        #endregion
-
     }
+    
+    private void SmoothMouse()
+    {
+        // Takes current local rotation of camera and rotation to move to
+        var localRotation = theCamera.localRotation;
+        Quaternion currentRotation = localRotation;
+        Quaternion desiredRotation = Quaternion.Euler(_cameraXRotation, localRotation.y, localRotation.z);
+
+        // Smoothing
+        localRotation = Quaternion.SlerpUnclamped(currentRotation, desiredRotation, Time.smoothDeltaTime * smoothRotateSpeed);
+        theCamera.localRotation = localRotation;
+
+        // Takes current rotation of player and rotation to move to 
+        var rotation = thePlayer.rotation;
+        Quaternion currentPlayerRotation = rotation;
+        Quaternion desiredPlayerRotation = Quaternion.Euler(rotation.x, _playerYRotation, rotation.z);
+
+        // Smoothing
+        rotation = Quaternion.SlerpUnclamped(currentPlayerRotation, desiredPlayerRotation, Time.smoothDeltaTime * smoothRotateSpeed);
+        thePlayer.rotation = rotation;
+    }
+
+    private void NormalMouse()
+    {
+        // Takes current local rotation of camera and rotation to move to
+        var localRotation = theCamera.localRotation;
+        theCamera.localRotation = Quaternion.Euler(_cameraXRotation, localRotation.y, localRotation.z);
+
+        // Takes current rotation of player and rotation to move to 
+        var rotation = thePlayer.rotation;
+        thePlayer.rotation = Quaternion.Euler(rotation.x, _playerYRotation, rotation.z);
+        
+    }
+    #endregion
+    
 }

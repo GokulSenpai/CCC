@@ -16,15 +16,15 @@ namespace Com.CompanyName.GameName
 
         [HideInInspector] public bool iWantToWatch = false;
 
-        Vector3 initialPosition;
-        Quaternion initialRotation;
+        private Vector3 _initialPosition;
+        private Quaternion _initialRotation;
 
-        Vector3 inspectPosition = new Vector3(-1.77f, 6.21f, -28.37f);
-        Quaternion inspectRotation = Quaternion.Euler(0f, 0f, 0f);
+        private readonly Vector3 _inspectPosition = new Vector3(-1.77f, 6.21f, -28.37f);
+        private readonly Quaternion _inspectRotation = Quaternion.Euler(0f, 0f, 0f);
 
-        Vector3 posLastFrame;
+        private Vector3 _posLastFrame;
 
-        private InspectorManager manager;
+        private InspectorManager _manager;
 
         private void Start()
         {
@@ -33,10 +33,11 @@ namespace Com.CompanyName.GameName
             // toggles this script off
             this.gameObject.GetComponent<Inspector>().enabled = false;
 
-            manager = GameObject.FindObjectOfType<InspectorManager>();
+            _manager = GameObject.FindObjectOfType<InspectorManager>();
 
-            initialPosition = transform.localPosition;
-            initialRotation = transform.localRotation;
+            var objectTransform = transform;
+            _initialPosition = objectTransform.localPosition;
+            _initialRotation = objectTransform.localRotation;
         }
 
         private void Update()
@@ -46,38 +47,39 @@ namespace Com.CompanyName.GameName
 
         private void LateUpdate()
         {
-            InspectingRotator();
+            Rotate();
         }
 
         private void Inspection()
         {
             if (Input.GetKeyDown(KeyCode.I))
-            {             
-
+            {
                 iWantToWatch = !iWantToWatch;
 
                 if (iWantToWatch)
                 {
                     iWantToWatch = true;
 
-                    manager.Watch(itemName, itemExtraInfo);
+                    _manager.Watch(itemName, itemExtraInfo);
 
-                    transform.localPosition = inspectPosition;
-                    transform.localRotation = inspectRotation;
+                    var objectTransform = transform;
+                    objectTransform.localPosition = _inspectPosition;
+                    objectTransform.localRotation = _inspectRotation;
                 }
                 else
                 {
                     iWantToWatch = false;
 
-                    manager.DontWatch();
+                    _manager.DontWatch();
 
-                    transform.localPosition = initialPosition;
-                    transform.localRotation = initialRotation;
+                    var objectTransform = transform;
+                    objectTransform.localPosition = _initialPosition;
+                    objectTransform.localRotation = _initialRotation;
                 }
             }
         }
 
-        private void InspectingRotator()
+        private void Rotate()
         {
             if (iWantToWatch)
             {
@@ -85,12 +87,12 @@ namespace Com.CompanyName.GameName
                 Cursor.visible = false;
 
                 if (Input.GetMouseButtonDown(0))
-                    posLastFrame = Input.mousePosition;
+                    _posLastFrame = Input.mousePosition;
 
                 if (Input.GetMouseButton(0))
                 {
-                    var delta = Input.mousePosition - posLastFrame;
-                    posLastFrame = Input.mousePosition;
+                    var delta = Input.mousePosition - _posLastFrame;
+                    _posLastFrame = Input.mousePosition;
 
                     var axis = Quaternion.AngleAxis(-90f, Vector3.forward) * delta;
                     transform.rotation = Quaternion.AngleAxis(delta.magnitude * 0.1f, axis) * transform.rotation;
@@ -105,17 +107,17 @@ namespace Com.CompanyName.GameName
 
         public void ShowItemName()
         {
-            manager.ShowName(itemName, ObjectNameUI);
+            _manager.ShowName(itemName, ObjectNameUI);
         }
 
         public void HideItemName()
         {
-            manager.HideName(ObjectNameUI);
+            _manager.HideName(ObjectNameUI);
         }
 
         public void ShowExtraInfo()
         {
-            manager.ShowAdditionalInfo(itemExtraInfo);
+            _manager.ShowAdditionalInfo(itemExtraInfo);
         }
     }
 }

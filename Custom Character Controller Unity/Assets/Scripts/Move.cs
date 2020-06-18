@@ -128,7 +128,7 @@ namespace Com.CompanyName.GameName
                 speed = walk;
             }
 
-            // Grounded Code
+            // Reset Velocity on ground
             if (iAmGrounded)
             {
                 _velocity.y = -2f;
