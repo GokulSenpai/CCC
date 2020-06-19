@@ -9,7 +9,6 @@ namespace State_Machine.States
         }
         
         private Vector3 _initialPosition;
-        private Vector3 _finalPosition;
         private float _graphValue;
         private float _speed;
 
@@ -23,8 +22,6 @@ namespace State_Machine.States
             base.Enter();
 
             _speed = 1f / Player.crouchTransitionDuration;
-            _finalPosition = Vector3.one;
-
             Player.crouchCurve.postWrapMode = WrapMode.Clamp;
             
             Player.playerAnimations.SetBool(Player.CrouchAnim, true);
@@ -45,27 +42,21 @@ namespace State_Machine.States
             _smoothCrouch = Player.crouchCurve.Evaluate(_graphValue);
 
             Player.controller.height =
-                Mathf.Lerp(Player.controller.height, Player.crouchControllerHeight, _smoothCrouch);
+                Mathf.LerpUnclamped(Player.controller.height, Player.crouchControllerHeight, _smoothCrouch);
 
-            _reqCent = Mathf.Lerp(Player.controller.center.y, Player.controllerCentreOffset.y, _smoothCrouch);
+            _reqCent = Mathf.LerpUnclamped(Player.controller.center.y, Player.controllerCentreOffset.y, _smoothCrouch);
             
             Player.controller.center = new Vector3(0, _reqCent, 0);
-            
-            
-            //Player.theCamera.transform.localPosition =_finalPosition * _smoothCrouch;
-            
-            Player.theCamera.transform.localPosition = Vector3.Lerp(_initialPosition,
+
+            Player.theCamera.transform.localPosition = Vector3.LerpUnclamped(_initialPosition,
                 _initialPosition - Player.crouchValues, _smoothCrouch);
-            
-            // _beforeCrouchPosition = Player.theCamera.transform.localPosition;
-            
+
             if (!IamIdle)
             {
                 StateMachine.ChangeState(Player.crouchWalkState);
             }
             
-            
-            
+
             if (!IWantToCrouch)
             {
                 if (Physics.OverlapSphere(Player.ceilingCheck.transform.position, Player.collisionOverlapRadius,
@@ -75,7 +66,9 @@ namespace State_Machine.States
                 }
                 else
                 {
-                    Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
+                    Player.crouchCurve.postWrapMode = WrapMode.PingPong;
+                    
+                    Player.theCamera.transform.localPosition = Vector3.LerpUnclamped(Player.theCamera.transform.localPosition,
                         _initialPosition, _smoothCrouch);
                     
                     Player.controller.height = Player.initialControllerHeight;

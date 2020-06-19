@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,12 +19,19 @@ public class Look : MonoBehaviour
 
     public bool smoothMouse = true;
 
+    private Player _playerRef;
+
     private float _cameraXRotation = 0f;
-    private float _playerYRotation = 0f;
+    [HideInInspector] public float _playerYRotation = 0f;
 
     #endregion
 
     #region MonoBehaviour Callbacks
+
+    private void Start()
+    {
+        _playerRef = thePlayer.gameObject.GetComponent<Player>();
+    }
 
     // Update is called once per frame
     private void Update()
@@ -37,7 +45,7 @@ public class Look : MonoBehaviour
         _playerYRotation += horizontalMouseInput;
 
         // Vertical Clamp
-        _cameraXRotation = Mathf.Clamp(_cameraXRotation, -70f, 70f);
+        _cameraXRotation = Mathf.Clamp(_cameraXRotation, _playerRef.peekClampMin, _playerRef.peekClampMax);
 
         if (smoothMouse)
         {

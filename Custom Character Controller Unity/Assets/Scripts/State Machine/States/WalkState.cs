@@ -18,6 +18,7 @@ namespace State_Machine.States
         public override void Enter()
         {
             base.Enter();
+            Speed = Player.walkSpeed;
             _beforeTiltRotation = Player.theCamera.transform.localRotation;
             _cameraTiltHorizontal = new Vector3(0f, 0f, Player.cameraTiltPos.z);
             _cameraTiltVertical = new Vector3(Player.cameraTiltPos.x, 0f, 0f);

@@ -43,6 +43,11 @@ namespace State_Machine.States
                 
                 StateMachine.ChangeState(Player.runState);
             }
+
+            if (!IWantToRun)
+            {
+                StateMachine.ChangeState(Player.walkState);
+            }
             
             if (IamIdle)
             {

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Com.CompanyName.GameName;
+using UnityEngine;
 
 namespace State_Machine.States
 {
@@ -10,24 +11,27 @@ namespace State_Machine.States
         
         private Vector3 _beforePeekPosition;
         private Quaternion _beforePeekRotation;
-        
+
+        private Look _look;
         public override void Enter()
         {
             base.Enter();
             var transform = Player.theCamera.transform;
             _beforePeekPosition = transform.localPosition;
             _beforePeekRotation = transform.localRotation;
+            _look = Player.gameObject.GetComponent<Look>();
         }
 
         public override void HandleInput()
         {
             base.HandleInput();
+            _look._playerYRotation = Mathf.Clamp(_look._playerYRotation, -21f, 21f);
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
-
+            
             Vector3 targetPeekPosition;
             Quaternion targetPeekRotation;
             

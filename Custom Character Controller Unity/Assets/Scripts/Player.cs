@@ -102,7 +102,11 @@ public class Player : MonoBehaviour
     public Vector3 peekPosition = new Vector3(0.37f, 0f, 0f);
     public Vector3 peekAngle = new Vector3(0f, 0f,14f);
     public float peekFactor = 7f;
+    public float peekClampMin = -70f;
+    public float peekClampMax = 70f;
     
+
+
     [Space] [Header("Camera Tilt")]
     public Vector3 cameraTiltPos = new Vector3(1.7f, 0f, 1.7f);
     public float cameraTiltFactor = 7f;
@@ -121,8 +125,6 @@ public class Player : MonoBehaviour
     private Vector3 _cameraInitialPos;
 
     [HideInInspector] public Vector3 targetBobPosition;
-    
-
 
     [HideInInspector] public CharacterController controller;
 

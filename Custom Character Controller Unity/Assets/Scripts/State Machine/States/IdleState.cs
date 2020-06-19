@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using System.Xml.Xsl;
 using UnityEngine;
-    
+using Debug = UnityEngine.Debug;
+
 namespace State_Machine.States
 {
     public class IdleState : State
@@ -32,7 +35,7 @@ namespace State_Machine.States
         protected bool IWantToZoom;
         protected bool FovCheck;
         protected bool IWantToPlayFootsteps;
-        
+
         private float _headBobIdleCounter;
 
         protected float Speed;
@@ -47,7 +50,7 @@ namespace State_Machine.States
         public override void Enter()
         {
             base.Enter();
-            Speed = Player.walkSpeed;
+            Player.playerAnimations.SetBool(Player.RunAnim, false);
         }
 
         public override void HandleInput()
@@ -87,7 +90,7 @@ namespace State_Machine.States
             IWantToPlayFootsteps = _iamGrounded && !Player.walkAudioSource.isPlaying && !IamIdle;
 
             Player.playerAnimations.SetBool(Player.WalkAnim, false);
-
+            
             // Idle HeadBob
             TargetBobPosition = Player.HeadBob(_headBobIdleCounter, Player.idleXIntensity, Player.idleYIntensity);
             _headBobIdleCounter += Time.smoothDeltaTime * Player.idleFactorA;

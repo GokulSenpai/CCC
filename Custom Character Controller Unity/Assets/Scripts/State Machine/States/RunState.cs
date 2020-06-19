@@ -58,6 +58,8 @@ namespace State_Machine.States
             {
                 Player.playerAnimations.SetBool(Player.RunAnim, false);
                 Speed = Player.walkSpeed;
+                
+                StateMachine.ChangeState(Player.walkState);
             }
         }
 

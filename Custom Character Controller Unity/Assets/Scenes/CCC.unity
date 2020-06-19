@@ -128,7 +128,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17240
+  m_Name: pb_Mesh17236
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -456,7 +456,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17050
+  m_Name: pb_Mesh17048
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -619,7 +619,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17166
+  m_Name: pb_Mesh17164
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5441,7 +5441,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17194
+  m_Name: pb_Mesh17190
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -5936,7 +5936,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17124
+  m_Name: pb_Mesh17122
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7225,7 +7225,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16960
+  m_Name: pb_Mesh16958
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7615,7 +7615,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16868
+  m_Name: pb_Mesh16866
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -7892,7 +7892,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16832
+  m_Name: pb_Mesh16830
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -19754,7 +19754,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16844
+  m_Name: pb_Mesh16842
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -22175,7 +22175,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16896
+  m_Name: pb_Mesh16894
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -24911,7 +24911,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17030
+  m_Name: pb_Mesh17028
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -25656,7 +25656,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17072
+  m_Name: pb_Mesh17070
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -26129,7 +26129,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16932
+  m_Name: pb_Mesh16930
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -26890,7 +26890,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh17110
+  m_Name: pb_Mesh17108
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -27444,16 +27444,6 @@ PrefabInstance:
       propertyPath: stateText
       value: 
       objectReference: {fileID: 878686374}
-    - target: {fileID: 4563680111192938063, guid: 42059367dad4da14ea7ed6501da94f55,
-        type: 3}
-      propertyPath: mouseSensitivity
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 4563680111192938063, guid: 42059367dad4da14ea7ed6501da94f55,
-        type: 3}
-      propertyPath: smoothRotateSpeed
-      value: 7
-      objectReference: {fileID: 0}
     - target: {fileID: 5509204130979434315, guid: 42059367dad4da14ea7ed6501da94f55,
         type: 3}
       propertyPath: m_Name
