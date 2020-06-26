@@ -12,6 +12,10 @@ namespace State_Machine.States
         private float _headBobRunCounter;
         protected bool LookBackLeftInput;
         protected bool LookBackRightInput;
+        
+        private Vector3 _currentCameraPos;
+        private float _smoothPercent = 0f;
+        
 
 
         public override void Enter()
@@ -28,31 +32,39 @@ namespace State_Machine.States
         }
 
         public override void LogicUpdate()
-        {  
+        {
             base.LogicUpdate();
-            
-            Player.playerAnimations.SetBool(Player.RunAnim, true);
-            
-            Player.theCamera.fieldOfView = Mathf.Lerp(Player.theCamera.fieldOfView,
-                Player.initialFov * Player.runFovMultiplier, Time.smoothDeltaTime * Player.runFovFactor);
-            
+
             Speed = Player.runSpeed;
 
-            // Run HeadBob
-            TargetBobPosition = Player.HeadBob(_headBobRunCounter, Player.runXIntensity, Player.runYIntensity);
-            _headBobRunCounter += Time.smoothDeltaTime * Player.runFactorA;
-            Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
-                TargetBobPosition + Player.runHeadBobOffset, Time.smoothDeltaTime * Player.runFactorB);
+            Player.playerAnimations.SetBool(Player.RunAnim, true);
 
+            _currentCameraPos = Player.theCamera.transform.localPosition;
+
+            Player.theCamera.fieldOfView = Mathf.LerpUnclamped(Player.theCamera.fieldOfView,
+                Player.initialFov * Player.runFovMultiplier, Time.smoothDeltaTime * Player.runFovFactor);
+
+            if (Player.headBob)
+            {
+                // Run HeadBob
+                TargetBobPosition = Player.HeadBob(_headBobRunCounter, Player.runXIntensity, Player.runYIntensity);
+                _headBobRunCounter += Time.smoothDeltaTime * Player.runFactorA;
+                Player.theCamera.transform.localPosition = Vector3.LerpUnclamped(Player.theCamera.transform.localPosition,
+                    TargetBobPosition + Player.runHeadBobOffset, Time.smoothDeltaTime * Player.runFactorB);
+            }
+            
             if (LookBackLeftInput || LookBackRightInput)
             {
                 StateMachine.ChangeState(Player.lookBackState);
             }
             
-            // if (TargetBobPosition.y < 1.6f)
-            // {
-            //     Footsteps();
-            // }
+            if (AirTime > Player.jumpAirTime)
+            {
+                _smoothPercent = Player.runJumpRecoilCurve.Evaluate(Player.smoothJumpRecoilFactor);
+                
+                Player.theCamera.transform.localPosition = Vector3.Lerp(_currentCameraPos,
+                    _currentCameraPos - Player.runJumpEffectRecoil, _smoothPercent); 
+            }
 
             if (!IWantToRun)
             {
@@ -71,6 +83,7 @@ namespace State_Machine.States
         public override void Exit()
         {
             base.Exit();
+            Speed = 0f;
         }
     }
 }

@@ -14,19 +14,25 @@ public class Look : MonoBehaviour
 
     [Space]
     [Header("Mouse Data")]
-    public float mouseSensitivity = 100f;
-    public float smoothRotateSpeed = 5f;
+    public float mouseSensitivity = 200f;
+    [Range(0.01f,1f)]
+    [Tooltip( "1 = Normal Mouse Movement" )]
+    public float smoothMouseFactor = 0.07f;
 
-    public bool smoothMouse = true;
+    public AnimationCurve mouseCurve;
 
+    private IEnumerator _lookPlay;
+    
     private Player _playerRef;
 
+    private float _smoothMouse = 0f;
+    
     private float _cameraXRotation = 0f;
-    [HideInInspector] public float _playerYRotation = 0f;
+    [HideInInspector] public float playerYRotation = 0f;
 
     #endregion
 
-    #region MonoBehaviour Callbacks
+    #region Function Callbacks
 
     private void Start()
     {
@@ -42,52 +48,36 @@ public class Look : MonoBehaviour
 
         // Rotation subtracted and added every frame based on mouse input
         _cameraXRotation -= verticalMouseInput;
-        _playerYRotation += horizontalMouseInput;
+        playerYRotation += horizontalMouseInput;
 
         // Vertical Clamp
-        _cameraXRotation = Mathf.Clamp(_cameraXRotation, _playerRef.peekClampMin, _playerRef.peekClampMax);
-
-        if (smoothMouse)
-        {
-            SmoothMouse();
-        }
-        else
-        {
-            NormalMouse();
-        }
-    }
-    
-    private void SmoothMouse()
-    {
-        // Takes current local rotation of camera and rotation to move to
-        var localRotation = theCamera.localRotation;
-        Quaternion currentRotation = localRotation;
-        Quaternion desiredRotation = Quaternion.Euler(_cameraXRotation, localRotation.y, localRotation.z);
-
-        // Smoothing
-        localRotation = Quaternion.SlerpUnclamped(currentRotation, desiredRotation, Time.smoothDeltaTime * smoothRotateSpeed);
-        theCamera.localRotation = localRotation;
-
-        // Takes current rotation of player and rotation to move to 
-        var rotation = thePlayer.rotation;
-        Quaternion currentPlayerRotation = rotation;
-        Quaternion desiredPlayerRotation = Quaternion.Euler(rotation.x, _playerYRotation, rotation.z);
-
-        // Smoothing
-        rotation = Quaternion.SlerpUnclamped(currentPlayerRotation, desiredPlayerRotation, Time.smoothDeltaTime * smoothRotateSpeed);
-        thePlayer.rotation = rotation;
-    }
-
-    private void NormalMouse()
-    {
-        // Takes current local rotation of camera and rotation to move to
-        var localRotation = theCamera.localRotation;
-        theCamera.localRotation = Quaternion.Euler(_cameraXRotation, localRotation.y, localRotation.z);
-
-        // Takes current rotation of player and rotation to move to 
-        var rotation = thePlayer.rotation;
-        thePlayer.rotation = Quaternion.Euler(rotation.x, _playerYRotation, rotation.z);
+        _cameraXRotation = Mathf.Clamp(_cameraXRotation, _playerRef.mouseClampMin, _playerRef.mouseClampMax);
         
+        SmoothMouse(smoothMouseFactor);
+    }
+
+    private void SmoothMouse(float smoothMouseValue)
+    {
+        // Evaluates a value from the public animator curve
+            _smoothMouse = mouseCurve.Evaluate(smoothMouseValue);
+
+            // Takes current local rotation of camera and rotation to move to
+            var localRotation = theCamera.localRotation;
+            Quaternion currentRotation = localRotation;
+            Quaternion desiredRotation = Quaternion.Euler(_cameraXRotation, localRotation.y, localRotation.z);
+
+            // Smoothing with generated evaluate value
+            localRotation = Quaternion.SlerpUnclamped(currentRotation, desiredRotation, _smoothMouse);
+            theCamera.localRotation = localRotation;
+
+            // Takes current rotation of player and rotation to move to 
+            var rotation = thePlayer.rotation;
+            Quaternion currentPlayerRotation = rotation;
+            Quaternion desiredPlayerRotation = Quaternion.Euler(rotation.x, playerYRotation, rotation.z);
+
+            // Smoothing with generated evaluate value
+            rotation = Quaternion.SlerpUnclamped(currentPlayerRotation, desiredPlayerRotation, _smoothMouse);
+            thePlayer.rotation = rotation;
     }
     #endregion
     

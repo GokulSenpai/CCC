@@ -26,23 +26,26 @@ namespace State_Machine.States
         {
             base.LogicUpdate();
 
-            // Crouch Walk HeadBob
-            TargetBobPosition = Player.HeadBob(_headBobCrouchCounter, Player.crouchXIntensity, Player.crouchYIntensity);
-            _headBobCrouchCounter += Time.smoothDeltaTime * Player.crouchFactorA;
-            Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
-                TargetBobPosition, Time.smoothDeltaTime * Player.crouchFactorB);
+            if (Player.headBob)
+            {
+                // Crouch Walk HeadBob
+                TargetBobPosition = Player.HeadBob(_headBobCrouchCounter, Player.crouchXIntensity, Player.crouchYIntensity);
+                _headBobCrouchCounter += Time.smoothDeltaTime * Player.crouchFactorA;
+                Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
+                    TargetBobPosition, Time.smoothDeltaTime * Player.crouchFactorB);
 
+            }
+          
             if (IamIdle)
             {
                 StateMachine.ChangeState(Player.crouchState);
             }
-            
         }
 
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();
-            Player.controller.Move(Player.transform.TransformDirection(MoveDirection) * (Time.smoothDeltaTime * Speed));
+            Player.controller.Move(Player.transform.TransformDirection(MoveDirection) * (Time.smoothDeltaTime * Player.walkSpeed));
         }
 
         public override void Exit()

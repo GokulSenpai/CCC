@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Com.CompanyName.GameName;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Com.CompanyName.GameName
+namespace Inspection_System
 {
     public class InteractableText : MonoBehaviour
     {

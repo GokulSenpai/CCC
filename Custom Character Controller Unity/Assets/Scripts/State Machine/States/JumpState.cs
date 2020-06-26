@@ -10,14 +10,11 @@ namespace State_Machine.States
 
         private bool _didIJumpOnce = false;
         private Vector3 _currentCameraPos;
-        private Quaternion _currentCameraRot;
-        
+        private float _smoothPercent = 0f;
+
         public override void Enter()
         {
             base.Enter();
-            var transform = Player.theCamera.transform;
-            _currentCameraPos = transform.localPosition;
-            _currentCameraRot = transform.localRotation;
         }
 
         public override void HandleInput()
@@ -29,30 +26,28 @@ namespace State_Machine.States
         {
             base.LogicUpdate();
             
+            _currentCameraPos = Player.theCamera.transform.localPosition;
+
+            _smoothPercent = Player.jumpRecoilCurve.Evaluate(Player.smoothJumpRecoilFactor);
+            
+            
             if (!IWantToJump)
             {
                 TransitionsFromJump();
             }
             
+
             if (!_didIJumpOnce)
             {
                 Velocity.y = Mathf.Sqrt(-2f * Player.gravity * Player.jumpHeight);
                 
                 _didIJumpOnce = true;
             }
-            
-            if (IAmGrounded)
+
+            if (_didIJumpOnce && IAmGrounded)
             {
                 Player.theCamera.transform.localPosition = Vector3.Lerp(_currentCameraPos,
-                    _currentCameraPos - Player.jumpEffectRecoil, Player.jumpEffectFactor * Time.smoothDeltaTime);
-                    
-                Player.theCamera.transform.localRotation = Quaternion.Slerp(_currentCameraRot,
-                    _currentCameraRot * Quaternion.Euler(Player.jumpEffectRotation),
-                    Player.jumpEffectFactor * Time.smoothDeltaTime);
-                    
-                Player.theCamera.transform.localRotation = Quaternion.Slerp(_currentCameraRot,
-                    _currentCameraRot * Quaternion.Inverse(Quaternion.Euler(Player.jumpEffectRotation)),
-                    Player.jumpEffectFactor * Time.smoothDeltaTime);
+                    _currentCameraPos - Player.jumpEffectRecoil, _smoothPercent);
             }
         }
 

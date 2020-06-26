@@ -15,10 +15,12 @@ namespace State_Machine.States
         private Vector3 _cameraTiltHorizontal;
         private Vector3 _cameraTiltVertical;
         
+        private Vector3 _currentCameraPos;
+        private float _smoothPercent = 0f;
+
         public override void Enter()
         {
             base.Enter();
-            Speed = Player.walkSpeed;
             _beforeTiltRotation = Player.theCamera.transform.localRotation;
             _cameraTiltHorizontal = new Vector3(0f, 0f, Player.cameraTiltPos.z);
             _cameraTiltVertical = new Vector3(Player.cameraTiltPos.x, 0f, 0f);
@@ -33,18 +35,34 @@ namespace State_Machine.States
         {
             base.LogicUpdate();
 
+            _currentCameraPos = Player.theCamera.transform.localPosition;
+
             Player.playerAnimations.SetBool(Player.WalkAnim, true);
             // Blend X for left and right strafe animations blend
             Player.playerAnimations.SetFloat(Player.BlendX, HorizontalInput);
             // Blend Y for forward and backward animations blend
             Player.playerAnimations.SetFloat(Player.BlendY, VerticalInput);
 
-            // Walk HeadBob
-            TargetBobPosition = Player.HeadBob(_headBobWalkCounter, Player.walkXIntensity, Player.walkYIntensity);
-            _headBobWalkCounter += Time.smoothDeltaTime * Player.walkFactorA;
-            Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
-                TargetBobPosition, Time.smoothDeltaTime * Player.walkFactorB);
+            Speed = Player.walkSpeed;
 
+            if (AirTime > Player.jumpAirTime)
+            {
+                _smoothPercent = Player.walkJumpRecoilCurve.Evaluate(Player.smoothJumpRecoilFactor);
+                
+                Player.theCamera.transform.localPosition = Vector3.Lerp(_currentCameraPos,
+                    _currentCameraPos - Player.walkJumpEffectRecoil, _smoothPercent); 
+            }
+
+            if (Player.headBob)
+            {
+                // Walk HeadBob
+                TargetBobPosition = Player.HeadBob(_headBobWalkCounter, Player.walkXIntensity, Player.walkYIntensity);
+                _headBobWalkCounter += Time.smoothDeltaTime * Player.walkFactorA;
+                Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
+                    TargetBobPosition, Time.smoothDeltaTime * Player.walkFactorB);
+
+            }
+          
             if (TargetBobPosition.x < 0 && !IWantToRun)
             {
                 Footsteps();
@@ -119,7 +137,7 @@ namespace State_Machine.States
                 StateMachine.ChangeState(Player.crouchState);
             }
 
-            if (IamIdle)
+            if (IamIdle && FovCheck)
             {
                 StateMachine.ChangeState(Player.idleState);
             }
@@ -129,6 +147,7 @@ namespace State_Machine.States
         public override void Exit()
         {
             base.Exit();
+            Speed = 0f;
         }
        
     }

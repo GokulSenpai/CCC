@@ -10,6 +10,7 @@ namespace State_Machine.States
         }
 
         private Quaternion _beforeLookBackRotation;
+        private float _smoothPercent = 0f;
 
         public override void Enter()
         {
@@ -25,35 +26,36 @@ namespace State_Machine.States
         public override void LogicUpdate()
         {  
             base.LogicUpdate();
+
+            _smoothPercent = Player.lookBackCurve.Evaluate(Player.smoothLookBackFactor);
             
             if (LookBackLeftInput)
             {
                 Player.theCamera.transform.localRotation = Quaternion.Slerp(_beforeLookBackRotation,
-                    Quaternion.Inverse(Quaternion.Euler(Player.lookBackRotation)), Time.smoothDeltaTime * Player.lookBackFactor);
+                    Quaternion.Inverse(Quaternion.Euler(Player.lookBackRotation)), _smoothPercent);
+                Player.gameObject.GetComponent<Look>().enabled = false;
             } 
             if (LookBackRightInput)
             {
                 Player.theCamera.transform.localRotation = Quaternion.Slerp(_beforeLookBackRotation,
-                    Quaternion.Euler(Player.lookBackRotation), Time.smoothDeltaTime * Player.lookBackFactor);
+                    Quaternion.Euler(Player.lookBackRotation), _smoothPercent);
+                Player.gameObject.GetComponent<Look>().enabled = false;
             }
             if(!(LookBackLeftInput || LookBackRightInput))
             {
                 Player.theCamera.transform.localRotation = Quaternion.Slerp(Player.theCamera.transform.localRotation,
-                    _beforeLookBackRotation, Time.smoothDeltaTime * Player.lookBackFactor);
+                    _beforeLookBackRotation, _smoothPercent);
                 
-                StateMachine.ChangeState(Player.runState);
+                TransitionsFromLookBack();
             }
+        }
 
-            if (!IWantToRun)
-            {
-                StateMachine.ChangeState(Player.walkState);
-            }
-            
+        private void TransitionsFromLookBack()
+        {
+            StateMachine.ChangeState(IWantToWalk ? Player.runState : Player.walkState);
+
             if (IamIdle)
             {
-                Player.theCamera.transform.localRotation = Quaternion.Slerp(Player.theCamera.transform.localRotation,
-                    _beforeLookBackRotation, Time.smoothDeltaTime * Player.lookBackFactor);
-                
                 StateMachine.ChangeState(Player.idleState);
             }
         }
@@ -66,6 +68,7 @@ namespace State_Machine.States
         public override void Exit()
         {
             base.Exit();
+            Player.gameObject.GetComponent<Look>().enabled = true;
         }
     }
 }

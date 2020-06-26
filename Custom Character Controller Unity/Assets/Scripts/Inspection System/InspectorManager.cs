@@ -1,10 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Com.CompanyName.GameName;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
 
-namespace Com.CompanyName.GameName
+namespace Inspection_System
 {
     public class InspectorManager : MonoBehaviour
     {
@@ -95,7 +94,7 @@ namespace Com.CompanyName.GameName
 
         public void HideName(Text ObjectNameUI)
         {
-            ObjectNameUI.color = Color.Lerp(ObjectNameUI.color, Color.clear, fadeTime * Time.smoothDeltaTime);
+            ObjectNameUI.color = Color.LerpUnclamped(ObjectNameUI.color, Color.clear, fadeTime * Time.smoothDeltaTime);
         }
 
         public void ShowAdditionalInfo(string itemExtraInfo)

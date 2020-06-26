@@ -2503,7 +2503,6 @@ GameObject:
   - component: {fileID: 8804473702666354008}
   - component: {fileID: 1487812880452980770}
   - component: {fileID: 4563680111192938056}
-  - component: {fileID: 4563680111192938062}
   - component: {fileID: 805817158853976605}
   - component: {fileID: 4563680111192938063}
   - component: {fileID: 1999560043}
@@ -2578,34 +2577,7 @@ CharacterController:
   m_StepOffset: 0.35
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
-  m_Center: {x: 0, y: 0.9, z: 0}
---- !u!114 &4563680111192938062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5509204130979434315}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d31a367839cf6164387a428a4f9d32c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  theCamera: {fileID: 4563680112344393410}
-  playerAnimations: {fileID: 1487812880452980770}
-  walkAudioSource: {fileID: 396959118}
-  walkAudioClip: {fileID: 8300000, guid: 0b6205faa2cf38e4884f223e68828d5b, type: 3}
-  speed: 1
-  run: 2
-  walk: 1
-  gravity: -19.62
-  Drag: {x: 1, y: 1, z: 1}
-  jumpHeight: 1.7
-  groundDistance: 0.4
-  groundCheck: {fileID: 4563680110427861267}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 256
+  m_Center: {x: 0, y: 0.8, z: 0}
 --- !u!114 &805817158853976605
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2618,19 +2590,94 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2ce1d7754a64b20a70074467f922cd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  run: 1
-  jump: 1
-  zoom: 1
-  peek: 1
   crouch: 1
+  headBob: 1
+  jump: 1
+  peek: 1
+  run: 1
   cameraTilt: 1
+  zoom: 1
   stateText: {fileID: 0}
   walkSpeed: 1
   runSpeed: 2
   jumpHeight: 1.7
-  jumpEffectRecoil: {x: 0, y: 14, z: 0}
-  jumpEffectRotation: {x: 7, y: 0, z: 0}
-  jumpEffectFactor: 7
+  jumpAirTime: 0.4
+  jumpEffectRecoil: {x: 0, y: 0.37, z: 0}
+  walkJumpEffectRecoil: {x: 0, y: 0.17, z: 0}
+  runJumpEffectRecoil: {x: 0, y: 0.17, z: 0}
+  jumpRecoilCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  walkJumpRecoilCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  runJumpRecoilCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  smoothJumpRecoilFactor: 1
   groundDistance: 0.4
   ceilingCheck: {fileID: 7134161963591998305}
   groundCheck: {fileID: 4563680110427861267}
@@ -2655,16 +2702,7 @@ MonoBehaviour:
   crouchFactorA: 5
   crouchFactorB: 7
   zoomFov: 14
-  zoomFactor: 7
-  runFovMultiplier: 1.28
-  initialFov: 0
-  runFovFactor: 7
-  lookBackRotation: {x: 0, y: 160, z: 0}
-  lookBackFactor: 35
-  crouchValues: {x: 0, y: 0.02, z: -0.01}
-  crouchFactor: 7
-  collisionOverlapRadius: 0.25
-  crouchCurve:
+  zoomCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -2678,7 +2716,63 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1.0023595
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  smoothZoomFactor: 0.27
+  runFovMultiplier: 1.28
+  runFovFactor: 7
+  lookBackRotation: {x: 0, y: 120, z: 0}
+  lookBackCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 0
+    m_RotationOrder: 4
+  smoothLookBackFactor: 0.07
+  initialFov: 0
+  crouchValues: {x: 0, y: 0.07, z: -0.01}
+  collisionOverlapRadius: 0.25
+  crouchCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -2688,26 +2782,54 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  crouchTransitionDuration: 1
+  smoothCrouchFactor: 1
   crouchControllerHeight: 0.1
+  controllerCentreOffset: {x: 0, y: 0.2, z: 0}
   initialControllerHeight: 0
-  controllerCentreOffset: {x: 0, y: 0.5, z: 0}
   initialControllerOffset: {x: 0, y: 0, z: 0}
-  peekPosition: {x: 0.37, y: 0, z: 0}
-  peekAngle: {x: 0, y: 0, z: 14}
-  peekFactor: 7
-  peekClampMin: -70
-  peekClampMax: 70
+  peekPosition: {x: 0.07, y: 0, z: 0}
+  peekAngle: {x: 0, y: 0, z: 1.7}
+  peekCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 0
+    m_RotationOrder: 4
+  smoothPeekFactor: 0.7
+  mousePeekClampMin: -21
+  mousePeekClampMax: 21
   cameraTiltPos: {x: 1.7, y: 0, z: 1.7}
   cameraTiltFactor: 7
   gravity: -19.62
   drag: {x: 1, y: 1, z: 1}
+  mouseClampMin: -70
+  mouseClampMax: 70
   theCamera: {fileID: 4563680112344393410}
   playerAnimations: {fileID: 1487812880452980770}
   walkAudioSource: {fileID: 396959118}
   walkAudioClip: {fileID: 8300000, guid: 0b6205faa2cf38e4884f223e68828d5b, type: 3}
   targetBobPosition: {x: 0, y: 0, z: 0}
   controller: {fileID: 0}
+  toolBar: 0
+  currentTab: Speed
 --- !u!114 &4563680111192938063
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2722,10 +2844,33 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   theCamera: {fileID: 4563680112344393423}
   thePlayer: {fileID: 8804473702666354008}
-  mouseSensitivity: 70
-  smoothRotateSpeed: 10
-  smoothMouse: 1
-  _playerYRotation: 0
+  mouseSensitivity: 100
+  smoothMouseFactor: 0.07
+  mouseCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  playerYRotation: 0
 --- !u!114 &1999560043
 MonoBehaviour:
   m_ObjectHideFlags: 0

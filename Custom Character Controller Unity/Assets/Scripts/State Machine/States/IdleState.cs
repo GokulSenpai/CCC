@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Xml.Xsl;
+using UnityEditor;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 
@@ -39,6 +40,8 @@ namespace State_Machine.States
         private float _headBobIdleCounter;
 
         protected float Speed;
+
+        protected float AirTime = 0f;
 
         protected Vector3 TargetBobPosition;
         
@@ -79,23 +82,37 @@ namespace State_Machine.States
             IAmGrounded = _iamGrounded;
             IamIdle = HorizontalInput.Equals(0) && VerticalInput.Equals(0) && _iamGrounded;
             IWantToWalk = !IamIdle && !IWantToZoom && _iamGrounded;
-            IWantToRun = _runningInput && VerticalInput > 0f && _iamGrounded;
-            IWantToZoom = _rightMouseZoomInput && _iamGrounded && IamIdle && !IWantToCrouch && !IWantToPeek;
-            IWantToJump = _jumpingInput && _iamGrounded;
-            IWantToCrouch = _crouchInput && _iamGrounded;
-            IWantToPeekLeft = _peekLeftInput && _iamGrounded && !IWantToWalk && !IWantToZoom;
-            IWantToPeekRight = _peekRightInput && _iamGrounded && !IWantToWalk && !IWantToZoom;
-            IWantToPeek = IWantToPeekLeft || IWantToPeekRight && IamIdle;
+            IWantToRun = _runningInput && VerticalInput > 0f && _iamGrounded && Player.run;
+            IWantToZoom = _rightMouseZoomInput && _iamGrounded && IamIdle && !IWantToCrouch && !IWantToPeek && Player.zoom;
+            IWantToJump = _jumpingInput && _iamGrounded && Player.jump;
+            IWantToCrouch = _crouchInput && _iamGrounded && Player.crouch;
+            IWantToPeekLeft = _peekLeftInput && _iamGrounded && !IWantToWalk && !IWantToZoom && Player.peek;
+            IWantToPeekRight = _peekRightInput && _iamGrounded && !IWantToWalk && !IWantToZoom && Player.peek;
+            IWantToPeek = IWantToPeekLeft || IWantToPeekRight && IamIdle && Player.peek;
             FovCheck = Mathf.Round(Player.theCamera.fieldOfView).Equals(Player.initialFov);
             IWantToPlayFootsteps = _iamGrounded && !Player.walkAudioSource.isPlaying && !IamIdle;
 
             Player.playerAnimations.SetBool(Player.WalkAnim, false);
+
+            if (IAmGrounded)
+            {
+                AirTime = 0f;
+            }
+            else
+            {
+                AirTime += Time.smoothDeltaTime;
+            }
             
-            // Idle HeadBob
-            TargetBobPosition = Player.HeadBob(_headBobIdleCounter, Player.idleXIntensity, Player.idleYIntensity);
-            _headBobIdleCounter += Time.smoothDeltaTime * Player.idleFactorA;
-            Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
-                TargetBobPosition, Time.smoothDeltaTime * Player.idleFactorB);
+            Debug.Log(AirTime);
+
+            if (Player.headBob)
+            {
+                // Idle HeadBob
+                TargetBobPosition = Player.HeadBob(_headBobIdleCounter, Player.idleXIntensity, Player.idleYIntensity);
+                _headBobIdleCounter += Time.smoothDeltaTime * Player.idleFactorA;
+                Player.theCamera.transform.localPosition = Vector3.Lerp(Player.theCamera.transform.localPosition,
+                    TargetBobPosition, Time.smoothDeltaTime * Player.idleFactorB);
+            }
 
             // All the possible transition states from Idle
             TransitionsFromIdle();
@@ -121,7 +138,7 @@ namespace State_Machine.States
                 StateMachine.ChangeState(Player.crouchState);
             }
 
-            if (IWantToPeek && FovCheck)
+            if (IWantToPeek)
             {
                 StateMachine.ChangeState(Player.peekState);
             }
@@ -161,7 +178,7 @@ namespace State_Machine.States
             {
                 Velocity.y = -2f;
             }
-            
+
             // Applying all the forces on Movement
             Player.controller.Move(Velocity * Time.smoothDeltaTime);
         }

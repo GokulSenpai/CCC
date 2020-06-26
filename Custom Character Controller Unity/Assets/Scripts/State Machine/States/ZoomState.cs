@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 
 namespace State_Machine.States
@@ -8,7 +9,9 @@ namespace State_Machine.States
         public ZoomState(Player player, StateMachine stateMachine) : base(player, stateMachine)
         {
         }
-        
+
+        private float _smoothPercent = 0f;
+
         public override void Enter()
         {
             base.Enter();
@@ -22,15 +25,18 @@ namespace State_Machine.States
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+            
+            _smoothPercent = Player.zoomCurve.Evaluate(Player.smoothZoomFactor);
+
             Player.theCamera.fieldOfView = Mathf.Lerp(Player.theCamera.fieldOfView,
-                IWantToZoom ? Player.zoomFov : Player.initialFov, Time.smoothDeltaTime * Player.zoomFactor);
+                IWantToZoom ? Player.zoomFov : Player.initialFov, _smoothPercent);
 
             if (FovCheck && !IWantToZoom && !IWantToPeek)
             {
                 StateMachine.ChangeState(Player.idleState);
             }
         }
-
+        
         public override void PhysicsUpdate()
         {
             base.PhysicsUpdate();

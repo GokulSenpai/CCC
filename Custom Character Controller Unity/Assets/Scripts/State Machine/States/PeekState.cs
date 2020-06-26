@@ -11,6 +11,7 @@ namespace State_Machine.States
         
         private Vector3 _beforePeekPosition;
         private Quaternion _beforePeekRotation;
+        private float _smoothPercent = 0f;
 
         private Look _look;
         public override void Enter()
@@ -25,12 +26,16 @@ namespace State_Machine.States
         public override void HandleInput()
         {
             base.HandleInput();
-            _look._playerYRotation = Mathf.Clamp(_look._playerYRotation, -21f, 21f);
+            var playerTransformRotation = Player.gameObject.transform.rotation;
+            _look.playerYRotation = Mathf.Clamp(_look.playerYRotation,
+                playerTransformRotation.y + Player.mousePeekClampMin, playerTransformRotation.y + Player.mousePeekClampMax);
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            _smoothPercent = Player.peekCurve.Evaluate(Player.smoothPeekFactor);
             
             Vector3 targetPeekPosition;
             Quaternion targetPeekRotation;
@@ -49,15 +54,16 @@ namespace State_Machine.States
             {
                 var transform = Player.theCamera.transform;
                 targetPeekPosition = _beforePeekPosition;
-                targetPeekRotation = _beforePeekRotation;
+                targetPeekRotation = Quaternion.identity;
                 
                 StateMachine.ChangeState(Player.idleState);
             }
             
-            Player.theCamera.transform.localPosition = Vector3.Lerp(_beforePeekPosition,
-                targetPeekPosition, Player.peekFactor * Time.smoothDeltaTime);
-            Player.theCamera.transform.localRotation = Quaternion.Slerp(_beforePeekRotation,
-                _beforePeekRotation * targetPeekRotation, Player.peekFactor * Time.smoothDeltaTime);
+            Player.theCamera.transform.localPosition = Vector3.LerpUnclamped(_beforePeekPosition,
+                targetPeekPosition, _smoothPercent);
+            
+            Player.theCamera.transform.localRotation = Quaternion.SlerpUnclamped(_beforePeekRotation,
+                _beforePeekRotation * targetPeekRotation, _smoothPercent);
         }
 
         public override void PhysicsUpdate()
