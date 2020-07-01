@@ -13,6 +13,6 @@ A character controller with multiple functionalities.
 
 * A Custom Outline Shader (in progress)
 
-https://youtu.be/O7QdWFgb28Y
+Asset Demo: https://youtu.be/O7QdWFgb28Y
 
-![](custom inspector.gif)
+Custom Inspector:
