@@ -13,4 +13,4 @@ A character controller with multiple functionalities.
 
 * A Custom Outline Shader (in progress)
 
-![](BlackBirdDemo.gif)
+![](custom inspector.gif)
