@@ -16,3 +16,5 @@ A character controller with multiple functionalities.
 # Asset Demo:  https://youtu.be/O7QdWFgb28Y
 
 Custom Inspector:
+
+![](custominspector.gif)
