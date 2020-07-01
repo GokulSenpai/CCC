@@ -102,8 +102,6 @@ namespace State_Machine.States
             {
                 AirTime += Time.smoothDeltaTime;
             }
-            
-            Debug.Log(AirTime);
 
             if (Player.headBob)
             {

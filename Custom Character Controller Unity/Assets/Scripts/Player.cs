@@ -16,14 +16,7 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool run;
     [HideInInspector] public bool cameraTilt;
     [HideInInspector] public bool zoom;
-    
-    // public AnimBool crouchValue;
-    // public AnimBool headBobValue;
-    // public AnimBool jumpValue;
-    // public AnimBool peekValue;
-    // public AnimBool runValue;
-    // public AnimBool tiltValue;
-    // public AnimBool zoomValue;
+
 
     public Text stateText;
 
@@ -182,7 +175,6 @@ public class Player : MonoBehaviour
         stateMachine.CurrentState.HandleInput();
         stateMachine.CurrentState.LogicUpdate();
         stateText.text = stateMachine.CurrentState.ToString();
-        Debug.Log(cameraTilt);
     }
 
     private void FixedUpdate()

@@ -17,23 +17,25 @@ namespace State_Machine.States
         public override void Enter()
         {
             base.Enter();
+            
             var transform = Player.theCamera.transform;
             _beforePeekPosition = transform.localPosition;
             _beforePeekRotation = transform.localRotation;
+            
             _look = Player.gameObject.GetComponent<Look>();
         }
 
         public override void HandleInput()
         {
             base.HandleInput();
-            var playerTransformRotation = Player.gameObject.transform.rotation;
-            _look.playerYRotation = Mathf.Clamp(_look.playerYRotation,
-                playerTransformRotation.y + Player.mousePeekClampMin, playerTransformRotation.y + Player.mousePeekClampMax);
         }
 
         public override void LogicUpdate()
         {
             base.LogicUpdate();
+
+            _look.playerYRotation = Mathf.Clamp(_look.playerYRotation,
+                Player.mousePeekClampMin, Player.mousePeekClampMax);
 
             _smoothPercent = Player.peekCurve.Evaluate(Player.smoothPeekFactor);
             
@@ -52,7 +54,6 @@ namespace State_Machine.States
             }
             else
             {
-                var transform = Player.theCamera.transform;
                 targetPeekPosition = _beforePeekPosition;
                 targetPeekRotation = Quaternion.identity;
                 

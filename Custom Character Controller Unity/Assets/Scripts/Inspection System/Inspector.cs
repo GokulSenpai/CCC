@@ -63,6 +63,8 @@ namespace Com.CompanyName.GameName
 
                     _manager.Watch(itemName, itemExtraInfo);
 
+                    FindObjectOfType<Player>().GetComponent<CharacterController>().enabled = false;
+
                     var objectTransform = transform;
                     objectTransform.localPosition = _inspectPosition;
                     objectTransform.localRotation = _inspectRotation;
@@ -70,8 +72,11 @@ namespace Com.CompanyName.GameName
                 else
                 {
                     iWantToWatch = false;
+                    
+                    FindObjectOfType<Player>().GetComponent<CharacterController>().enabled = true;
 
                     _manager.DontWatch();
+                    
 
                     var objectTransform = transform;
                     objectTransform.localPosition = _initialPosition;
@@ -85,7 +90,7 @@ namespace Com.CompanyName.GameName
             if (iWantToWatch)
             {
                 Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = false;
+                Cursor.visible = true;
 
                 if (Input.GetMouseButtonDown(0))
                     _posLastFrame = Input.mousePosition;
